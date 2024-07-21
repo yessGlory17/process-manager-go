@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { goProcessResult } from "../../api/types";
-import { Box, Link } from "@mui/material";
+import { Paper } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
 
 function Table() {
   const [processes, setProcesses] = useState<goProcessResult["Result"]>([]);
@@ -9,8 +10,8 @@ function Table() {
   useEffect(() => {
     const get = async () => {
       const b = await window?.goProcess();
-      console.log("TYPE: ", Object.keys(b));
-      console.log("DATA: ", b["Result"]);
+      // console.log("TYPE: ", Object.keys(b));
+      // console.log("DATA: ", b["Result"]);
       setProcesses(b.Result);
     };
     setInterval(() => {
@@ -19,9 +20,19 @@ function Table() {
   }, []);
 
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
-      {/* {processes} */}
+    <Paper sx={{ width: "calc(100%-16px)", height: "calc(100%-16px)", margin: 2, padding:4 }}>
       <DataGrid
+        sx={{
+          border: "none",
+          "& .MuiDataGrid-cell": {
+            border: "none",
+          },
+          '& .MuiDataGrid-columnHeader':{
+            border:"none",
+            backgroundColor:"#1F2937"
+          },
+        }}
+        rowSelection={false}
         rows={processes.map((p, i) => ({ id: i, ...p }))}
         columns={[
           {
@@ -43,8 +54,8 @@ function Table() {
             minWidth: 500,
             renderCell: ({ value, row }) => (
               <Link
-                sx={{ textDecoration: "none" }}
-                href={`/process/detail/${row.id}`}
+                style={{ textDecoration: "none", color:"#11B886" }}
+                to={`/process/detail/${row.pid}`}
               >
                 {value}
               </Link>
@@ -64,7 +75,7 @@ function Table() {
           },
         ]}
       />
-    </Box>
+    </Paper>
   );
 }
 
