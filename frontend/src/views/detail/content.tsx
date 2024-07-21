@@ -1,9 +1,10 @@
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { GoCpu } from "react-icons/go";
 import { GrMemory } from "react-icons/gr";
 import { VscServerProcess } from "react-icons/vsc";
+import { IoIosFlash } from "react-icons/io";
 import { useParams } from "react-router-dom";
 import { Process } from "../../api/types";
 
@@ -32,14 +33,39 @@ function Content() {
           component={Paper}
           p={4}
         >
-          <Grid container item xs={12} justifyContent="space-between" ml={2} mt={2}>
+          <Grid
+            container
+            item
+            xs={12}
+            justifyContent="space-between"
+            ml={2}
+            mt={2}
+            mb={2}
+          >
             <Grid item xs={3}>
               <Typography m={1} variant="h5" color="text.primary">
                 General Info
               </Typography>
             </Grid>
-            <Grid item xs={3}>
-                {/* <Typography>Actions</Typography> */}
+            <Grid item xs={3} lg={2}>
+              <Button
+                startIcon={<IoIosFlash size={32} color="#6950E8" />}
+                variant="contained"
+                sx={{
+                  width: "100%",
+                  backgroundColor: "rgba(105, 80, 232, 0.2)",
+                  color: "white",
+                  display:"flex",
+                  flexDirection:"row",
+                  justifyContent:"between",
+                  "&:hover": {
+                    backgroundColor: "rgba(105, 80, 232, 0.2)",
+                  },
+                }}
+                disableElevation
+              >
+                Actions
+              </Button>
             </Grid>
           </Grid>
           <Grid container item xs={12} justifyContent="space-between" ml={2}>
