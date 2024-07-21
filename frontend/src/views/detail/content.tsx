@@ -5,12 +5,15 @@ import { GoCpu } from "react-icons/go";
 import { GrMemory } from "react-icons/gr";
 import { VscServerProcess } from "react-icons/vsc";
 import { IoIosFlash } from "react-icons/io";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Process } from "../../api/types";
+import Tree from "../../components/ProcessTree";
+import { ReactFlowProvider } from "@xyflow/react";
 
 function Content() {
   const [process, setProcess] = useState<Process | null>(null);
   const { pid } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const get = async () => {
@@ -23,6 +26,7 @@ function Content() {
 
   return (
     <Grid container direction="column" p={3} spacing={3}>
+      <Button onClick={() => navigate(-1)}>Back</Button>
       <Grid container item xs={12} justifyContent="space-evenly" spacing={1}>
         <Grid
           container
@@ -55,9 +59,9 @@ function Content() {
                   width: "100%",
                   backgroundColor: "rgba(105, 80, 232, 0.2)",
                   color: "white",
-                  display:"flex",
-                  flexDirection:"row",
-                  justifyContent:"between",
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "between",
                   "&:hover": {
                     backgroundColor: "rgba(105, 80, 232, 0.2)",
                   },
@@ -192,7 +196,9 @@ function Content() {
         </Grid> */}
       </Grid>
       <Grid container item xs={12}>
-        <Paper sx={{ width: "100%", height: "500px" }} />
+        <ReactFlowProvider>
+          {process?.childrens && <Tree process={process} />}
+        </ReactFlowProvider>
       </Grid>
     </Grid>
   );

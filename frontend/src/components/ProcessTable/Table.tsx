@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import { goProcessResult } from "../../api/types";
-import { Paper } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
+
+const color = (percent: number) => {
+  const value = percent;
+  const r = (255 * value) / 100;
+  const g = 255 - (255 * value) / 100;
+  return 'rgb(' + r + ',' + g + ',0)';
+};
 
 function Table() {
   const [processes, setProcesses] = useState<goProcessResult["Result"]>([]);
@@ -66,12 +73,14 @@ function Table() {
             headerName: "Memory",
             minWidth: 200,
             flex: 1,
+            renderCell: ({ value }) => <Typography sx={{ color: color(value) }} >%{value.toFixed(5)}</Typography>
           },
           {
             field: "cpu",
             headerName: "Cpu",
             minWidth: 200,
             flex: 1,
+            renderCell: ({ value }) => <Typography sx={{ color: color(value) }} >%{value.toFixed(5)}</Typography>
           },
         ]}
       />

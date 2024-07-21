@@ -5,7 +5,7 @@ function Content() {
   return (
     <Grid container direction="column">
       <Grid item xs={12}>
-        <Box width="100%" height="50px" border="1px solid red"></Box>
+        <Box width="100%" height="50px" ></Box>
       </Grid>
       <ProcessTable />
     </Grid>

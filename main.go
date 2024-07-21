@@ -31,6 +31,63 @@ func createServer() {
 	http.ListenAndServe(":5555", nil)
 }
 
+func generateProcessDetail(p *process.Process) pResult {
+
+	name, err := p.Name()
+
+	if err != nil {
+		fmt.Println("Connot find process name!")
+	}
+
+	memory, err := p.MemoryPercent()
+
+	if err != nil {
+		fmt.Println("Connot find process memory usage!")
+	}
+
+	cpu, err := p.CPUPercent()
+
+	if err != nil {
+		fmt.Println("Connot find process cpu usage!")
+	}
+
+	username, err := p.Username()
+
+	if err != nil {
+		fmt.Println("Connot find process username!")
+	}
+
+	return pResult{
+		Pid:      p.Pid,
+		Exe:      name,
+		Cpu:      cpu,
+		Memory:   memory,
+		Username: username,
+	}
+}
+
+func getProcessChilds(pid int32) []pResult {
+	list, err := process.Processes()
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	var childs []pResult
+
+	for item := range list {
+		if list[item].Pid == pid {
+			c, _ := list[item].Children()
+
+			for x := range c {
+				childs = append(childs, generateProcessDetail(c[x]))
+			}
+		}
+	}
+
+	return childs
+}
+
 func processesDetail() pResponse {
 	list, err := process.Processes()
 	if err != nil {
@@ -61,16 +118,6 @@ func processesDetail() pResponse {
 		if err != nil {
 			fmt.Println("Connot find process username!")
 		}
-
-		// childs, err := list[x].Children()
-
-		// if err != nil {
-		// 	fmt.Println("Connot find process childs!")
-		// }
-
-		// for child := range childs {
-
-		// }
 
 		//Processin parentlarini al ve bir process tree olustur.
 		result.Result = append(result.Result, &pResult{
@@ -106,13 +153,20 @@ func main() {
 
 		for x := range p.Result {
 			if p.Result[x].Pid == pid {
+
+				childs := getProcessChilds(pid)
+
+				if len(childs) > 0 {
+					fmt.Println("BULUNAN PROCESS: ", p.Result[x].Exe)
+				}
+
 				result.Result = &pResult{
 					Pid:       p.Result[x].Pid,
 					Exe:       p.Result[x].Exe,
 					Cpu:       p.Result[x].Cpu,
 					Memory:    p.Result[x].Memory,
 					Username:  p.Result[x].Username,
-					Childrens: p.Result[x].Childrens,
+					Childrens: childs,
 				}
 				break
 			}
